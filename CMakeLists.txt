@@ -9,20 +9,26 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
-  pcl_conversions)
+  pcl_conversions
+  cv_bridge
+  image_transport
+)
 
+set(OpenCV_DIR "/home/vance/softwares/opencv-3.3.1/build")
+find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED)
 
 include_directories(
   include
-	${catkin_INCLUDE_DIRS} 
-	#${EIGEN3_INCLUDE_DIR}
-	${PCL_INCLUDE_DIRS})
+  ${catkin_INCLUDE_DIRS} 
+  ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+)
 
 catkin_package(
   CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy std_msgs tf pcl_conversions
-  DEPENDS EIGEN3 PCL
+  DEPENDS EIGEN3 PCL 
   INCLUDE_DIRS include
   LIBRARIES loam
 )
@@ -49,6 +55,22 @@ target_link_libraries(laserMapping ${catkin_LIBRARIES} ${PCL_LIBRARIES} loam )
 add_executable(transformMaintenance src/transform_maintenance_node.cpp)
 target_link_libraries(transformMaintenance ${catkin_LIBRARIES} ${PCL_LIBRARIES} loam )
 
+
+######
+add_executable(downsample_input_points src/downsample_input_points.cpp)
+target_link_libraries(downsample_input_points ${catkin_LIBRARIES} ${PCL_LIBRARIES} )
+
+add_executable(save_odometry src/save_odometry.cpp)
+target_link_libraries(save_odometry ${catkin_LIBRARIES})
+
+add_executable(match  src/match.cpp)
+target_link_libraries(match ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_executable(save_images  src/save_images.cpp)
+target_link_libraries(save_images ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+
+##### test
 if (CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
   # TODO: Download test data

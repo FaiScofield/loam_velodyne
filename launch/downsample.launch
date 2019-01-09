@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="rviz" default="true" />
+
+  <node pkg="loam_velodyne" type="downsample_input_points" name="downsample_input_points" output="screen" respawn="true">
+    <param name="leafsize" value="0.05" />
+    <remap from="/velodyne_points_orig" to="/velodyne_points"/>
+  </node>
+<!--
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find loam_velodyne)/rviz_cfg/loam_velodyne.rviz" />
+  </group>
+-->
+
+</launch>
+
+
+
